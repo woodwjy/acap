@@ -1,5 +1,3 @@
-CC = gcc
-CFLAGS = -g -Wall
 LIBVAR   = -lutil
 LIBPATH  = -L../util
 

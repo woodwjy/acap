@@ -1,6 +1,3 @@
-CC = gcc
-CFLAGS = -g -Wall
-
 ac: main.o
 	$(CC)  main.o -o ../ac
 main.o: main.c

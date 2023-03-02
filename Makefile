@@ -1,3 +1,7 @@
+CC = gcc
+AR = ar
+CFLAGS = -g -Wall
+
 PWD_dir=$(shell pwd)
 ap = $(PWD_dir)/ac-client
 ac = $(PWD_dir)/ac-server
