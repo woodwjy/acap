@@ -1,5 +1,5 @@
 LIBVAR   = -lutil -lpthread -lsqlite3
-LIBPATH  = -L../util -L../package/libs
+LIBPATH  = -L../util -L../ext
 
 src=$(wildcard *.c)
 objs=$(patsubst %.c,%.o,$(src))

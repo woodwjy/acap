@@ -1,5 +1,5 @@
 
 #include "stdio.h"
 void main(){
-    printf("Hello, user-client\n");
+    printf("Hello, user\n");
 }

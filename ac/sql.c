@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "public.h"
-#include "sqlite3.h"
+#include "../ext/sqlite3.h"
 #include "public.h"
 #include "sql.h"
 
