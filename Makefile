@@ -3,9 +3,9 @@ AR = ar
 CFLAGS = -g -Wall
 
 PWD_dir=$(shell pwd)
-ap = $(PWD_dir)/ac-client
-ac = $(PWD_dir)/ac-server
-user = $(PWD_dir)/user-client
+ap = $(PWD_dir)/ac
+ac = $(PWD_dir)/ac
+user = $(PWD_dir)/user
 util = $(PWD_dir)/util
 all:
 	make -C $(util) 

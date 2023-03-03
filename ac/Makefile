@@ -1,0 +1,16 @@
+LIBVAR   = -lutil -lpthread
+LIBPATH  = -L../util
+
+src=$(wildcard *.c)
+objs=$(patsubst %.c,%.o,$(src))
+target=ac
+
+$(target):$(objs)
+	$(CC) -o $@ $^ $(LIBVAR) $(LIBPATH)
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c $<
+
+.PHONY:clean
+clean:
+	-rm -f $(target) $(objs)
