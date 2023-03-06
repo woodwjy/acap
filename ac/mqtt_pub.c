@@ -21,12 +21,12 @@ static int running = 1;
 
 void my_pub_connect_callback(struct mosquitto *mosq,void *obj,int rc)
 {
-    printf("Call the function: my_connect_callback.\n");
+    printf("Call the function: my_pub_connect_callback.\n");
 }
 
 void my_pub_disconnect_callback(struct mosquitto *mosq,void *obj,int rc)
 {
-    printf("Call the function: my_disconnect_callback.\n");
+    printf("Call the function: my_pub_disconnect_callback.\n");
     running = 0;
 
 }

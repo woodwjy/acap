@@ -5,25 +5,28 @@
 
 
 void testSql(){
-    // SqlInsertStudent();
-    // SqlQueryStudent();
+    SqlInsertStudent();
+    SqlQueryStudent();
+}
+
+void testPub(){
+     MqttPub("pub/test", "11111");
 }
 
 void UserServMain(){
 
     SqlServInit();
-    MqttSubInit();
     MqttPubInit();
     while (GetRunningState())
     {
         loginfo("userServMain\n");
-        sleep(2);
-        MqttPub("pub/test", "11111");
+        sleep(1);
+
+        // testPub();
         // testSql();
     }
 
     SqlServExit();
     MqttPubExit();
-    MqttSubExit();
     pthread_exit(0);
 }

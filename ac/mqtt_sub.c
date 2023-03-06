@@ -91,7 +91,7 @@ void my_message_callback(struct mosquitto *mosq, void *obj, const struct mosquit
 
 }
 
-int MqttSubInit()
+int MqttSubMain()
 {
     int ret;
     struct mosquitto *mosq;
@@ -124,7 +124,7 @@ int MqttSubInit()
 
     loginfo("Start!\n");
 
-    while(running)
+    while(GetRunningState() && running)
     {
         mosquitto_loop(mosq,-1,1);
         //mosquitto_loop_start(mosq);
@@ -135,7 +135,3 @@ int MqttSubInit()
 
     return 0;
 } 
-
-void MqttSubExit(){
-    running = 0;
-}

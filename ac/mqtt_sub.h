@@ -1,2 +1,1 @@
-int MqttSubInit();
-void MqttSubExit();
+int MqttSubMain();

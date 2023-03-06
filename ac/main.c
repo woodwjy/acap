@@ -46,6 +46,11 @@ void pthreadInit(){
     }
 
 
+    ret = pthread_create(&tid[index++], NULL, &MqttSubMain, NULL);
+    if ( ret != 0){
+        logerr("pthread_create error: error_code = %d\n", ret);
+    }
+
     ret = pthread_create(&tid[index++], NULL, &DiscServMain, NULL);
     if ( ret != 0){
         logerr("pthread_create error: error_code = %d\n", ret);
