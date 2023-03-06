@@ -5,4 +5,10 @@
                 "name TEXT NOT NULL," \
                 "age INTEGER NOT NULL);"
 
-# define FORMAT_INSERT_STUDENT  "INSERT INTO test_table (name, age) VALUES ('%s', %d);"             
+# define FORMAT_INSERT_STUDENT  "INSERT INTO test_table (name, age) VALUES ('%s', %d);" 
+
+void SqlServInit();
+void SqlInsertStudent();
+void SqlQueryStudent();
+void SqlServExit();
+

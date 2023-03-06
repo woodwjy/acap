@@ -29,7 +29,7 @@ int callback(void * para,int n_column,char** data_column,char** name_column){
     return 0;
 }
 
-void SqlSrvInit(){
+void SqlServInit(){
     int ret;
     ret = sqlite3_open(SQLITE_DB_NAME, &db);
     if (ret == SQLITE_OK){
@@ -76,7 +76,7 @@ void SqlQueryStudent(){
     }
 }
 
-void SqlSrvExit(){
+void SqlServExit(){
     if(db != NULL){
         loginfo("sqlite3_close\n");
         sqlite3_close(db);

@@ -2,25 +2,28 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "public.h"
-#include "sql.h"
 
 
 void testSql(){
-    SqlInsertStudent();
-    SqlQueryStudent();
+    // SqlInsertStudent();
+    // SqlQueryStudent();
 }
 
 void UserServMain(){
 
-    SqlSrvInit();
+    SqlServInit();
+    MqttSubInit();
+    MqttPubInit();
     while (GetRunningState())
     {
         loginfo("userServMain\n");
         sleep(2);
+        MqttPub("pub/test", "11111");
         // testSql();
     }
 
-    SqlSrvExit();
+    SqlServExit();
+    MqttPubExit();
+    MqttSubExit();
     pthread_exit(0);
-    
 }

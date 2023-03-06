@@ -1,4 +1,4 @@
-LIBVAR   = -lutil -lpthread -lsqlite3
+LIBVAR   = -lutil -lpthread -lsqlite3 -lmosquitto
 LIBPATH  = -L../util -L../ext
 
 src=$(wildcard *.c)
