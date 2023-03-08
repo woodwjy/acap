@@ -15,17 +15,32 @@
 #include "yyjson.h"
 
 static struct {
-    const char * MULTICAST;
     const char * STAGE;
     const char * AC_HOST;
     const char * PRODUCT;
     const char * DEV_ID;
+
+    const char * STAGE_DISCOVERY;
+    const char * STAGE_OFFER;
+    const char * STAGE_READY;
+    const char * STAGE_ACK;
+
+    const char * ADDR_MULTICAST;
+    const int    PORT_MULTICAST;
+
 } Global = {
-    .MULTICAST  = "239.255.255.250",
     .STAGE   = "stage",
     .AC_HOST = "achost",
     .PRODUCT = "product",
-    .DEV_ID = "devid"
+    .DEV_ID = "devid",
+
+    .STAGE_DISCOVERY = "discovery",
+    .STAGE_OFFER = "offer",
+    .STAGE_READY = "ready",
+    .STAGE_ACK = "ack",
+
+    .ADDR_MULTICAST = "239.255.255.250",
+    .PORT_MULTICAST = 18899
 };
 
 
@@ -72,7 +87,7 @@ int send_multicast_data(const char * data, unsigned short port) {
         .sin_family = AF_INET,
         .sin_port = htons(port)
     };
-    if (inet_aton(ADDR_MULTICAST, &dest_addr.sin_addr) == 0) {
+    if (inet_aton(Global.ADDR_MULTICAST, &dest_addr.sin_addr) == 0) {
         printf("inet_aton failed, errno = %s (%d)\n", strerror(errno), errno);
         goto end;
     }
@@ -141,7 +156,7 @@ int dis_muti_send_discovery(disctx * ctx){
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
     yyjson_mut_val *root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
-    yyjson_mut_obj_add_str(doc, root, Global.STAGE, STAGE_DISCOVERY);
+    yyjson_mut_obj_add_str(doc, root, Global.STAGE, Global.STAGE_DISCOVERY);
     yyjson_mut_obj_add_str(doc, root, Global.AC_HOST, "");
     yyjson_mut_obj_add_str(doc, root, Global.PRODUCT, ctx->product);
     yyjson_mut_obj_add_str(doc, root, Global.DEV_ID, ctx->devid);
@@ -151,7 +166,7 @@ int dis_muti_send_discovery(disctx * ctx){
     char buffer[DIS_BUFFER_LEN] = {};
     snprintf(buffer, sizeof(buffer),"%s", json);
 
-    int ret = send_multicast_data(buffer, PORT_MULTICAST);
+    int ret = send_multicast_data(buffer, Global.PORT_MULTICAST);
     if (ret != 0){
         printf("send fail\n");
     }
@@ -169,7 +184,7 @@ int dis_muti_send_ready(disctx * ctx){
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
     yyjson_mut_val *root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
-    yyjson_mut_obj_add_str(doc, root, Global.STAGE, STAGE_READY);
+    yyjson_mut_obj_add_str(doc, root, Global.STAGE, Global.STAGE_READY);
     yyjson_mut_obj_add_str(doc, root, Global.AC_HOST, ctx->achost);
     yyjson_mut_obj_add_str(doc, root, Global.PRODUCT, ctx->product);
     yyjson_mut_obj_add_str(doc, root, Global.DEV_ID, ctx->devid);
@@ -179,7 +194,7 @@ int dis_muti_send_ready(disctx * ctx){
     char buffer[DIS_BUFFER_LEN] = {};
     snprintf(buffer, sizeof(buffer),"%s", json);
 
-    int ret = send_multicast_data(buffer, PORT_MULTICAST);
+    int ret = send_multicast_data(buffer, Global.PORT_MULTICAST);
     if (ret != 0){
         printf("send fail\n");
     }
@@ -198,13 +213,13 @@ static int dis_send_offer(disctx * ctx, struct sockaddr_in address){
         return -1;
     }
 
-    address.sin_port = htons(PORT_MULTICAST);
+    address.sin_port = htons(Global.PORT_MULTICAST);
 
     // payload
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
     yyjson_mut_val *root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
-    yyjson_mut_obj_add_str(doc, root, Global.STAGE, STAGE_OFFER);
+    yyjson_mut_obj_add_str(doc, root, Global.STAGE, Global.STAGE_OFFER);
     yyjson_mut_obj_add_str(doc, root, Global.AC_HOST, ctx->achost);
     yyjson_mut_obj_add_str(doc, root, Global.PRODUCT, ctx->product);
     yyjson_mut_obj_add_str(doc, root, Global.DEV_ID, ctx->devid);
@@ -232,13 +247,13 @@ static int dis_send_ack(disctx * ctx, struct sockaddr_in address){
         return -1;
     }
 
-    address.sin_port = htons(PORT_MULTICAST);
+    address.sin_port = htons(Global.PORT_MULTICAST);
 
     // payload
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
     yyjson_mut_val *root = yyjson_mut_obj(doc);
     yyjson_mut_doc_set_root(doc, root);
-    yyjson_mut_obj_add_str(doc, root, Global.STAGE, STAGE_ACK);
+    yyjson_mut_obj_add_str(doc, root, Global.STAGE, Global.STAGE_ACK);
     // yyjson_mut_obj_add_str(doc, root, Global.AC_HOST, "");
     yyjson_mut_obj_add_str(doc, root, Global.PRODUCT, ctx->product);
     yyjson_mut_obj_add_str(doc, root, Global.DEV_ID, ctx->devid);
@@ -287,12 +302,12 @@ int dis_socket_read(disctx *ctx){
         goto end;
     }
 
-    if(strcmp(packet.stage, STAGE_DISCOVERY) == 0){
+    if(strcmp(packet.stage, Global.STAGE_DISCOVERY) == 0){
         dis_send_offer(ctx, address);
         goto end;
     }
 
-    if(strcmp(packet.stage, STAGE_READY) == 0){
+    if(strcmp(packet.stage, Global.STAGE_READY) == 0){
         if (ctx->done_callback != NULL){
             ctx->done_callback(ctx);
         }
@@ -301,7 +316,7 @@ int dis_socket_read(disctx *ctx){
         goto end;
     }
 
-    if(strcmp(packet.stage, STAGE_OFFER) == 0){
+    if(strcmp(packet.stage, Global.STAGE_OFFER) == 0){
         if (ctx->done_callback != NULL){
             ctx->done_callback(ctx);
         }
@@ -391,7 +406,7 @@ int dis_socket_create(disctx *ctx){
     // bind socket
     struct sockaddr_in addr = {
         .sin_family      = AF_INET,
-        .sin_port        = htons(PORT_MULTICAST),
+        .sin_port        = htons(Global.PORT_MULTICAST),
         .sin_addr.s_addr = htonl(INADDR_ANY)
     };
     if (bind(ctx->sock, (struct sockaddr *)&addr, sizeof(addr)) != 0) {
@@ -401,7 +416,7 @@ int dis_socket_create(disctx *ctx){
 
     // set IP_ADD_MEMBERSHIP
     struct ip_mreq imr = {
-        .imr_multiaddr.s_addr = inet_addr(ADDR_MULTICAST),
+        .imr_multiaddr.s_addr = inet_addr(Global.ADDR_MULTICAST),
         .imr_interface.s_addr = htonl(INADDR_ANY)
     };
     if (setsockopt(ctx->sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &imr, sizeof(struct ip_mreq)) != 0) {

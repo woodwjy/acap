@@ -7,14 +7,6 @@
 #define DIS_HOST_LEN 64
 #define DIS_IP_LEN   16
 
-#define STAGE_DISCOVERY "discovery"
-#define STAGE_OFFER "offer"
-#define STAGE_READY "ready"
-#define STAGE_ACK "ack"
-#define ADDR_MULTICAST "239.255.255.250"
-#define PORT_MULTICAST 18899
-
-
 typedef struct disctx {
     int             sock;                                   // socket
     char        achost[DIS_HOST_LEN];
