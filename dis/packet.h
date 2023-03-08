@@ -25,10 +25,6 @@ typedef struct dis_packet {
 
 
 int dis_socket_read(disctx *ctx);
-int send_multicast_data(const char * data, unsigned short port);
-int dis_packet_parser(const char * data, size_t data_len, dis_packet * packet);
-int dis_muti_send_discovery(disctx * ctx);
-int dis_muti_send_ready(disctx * ctx);
 int dis_socket_create(disctx *ctx);
 int dis_socket_close(disctx * ctx);
 
