@@ -186,7 +186,7 @@ int dis_muti_send_ready(disctx * ctx){
         printf("send fail\n");
     }
 
-    printf(buffer);
+    // printf(buffer);
 
     return 0;
 
@@ -409,7 +409,7 @@ int dis_socket_create(disctx *ctx){
     }
 
     printf("create SSDP socket %d\n", ctx->sock);
-    result = 0;
+    result = 0; 
 end:
     if (result == -1) {
         dis_socket_close(ctx);

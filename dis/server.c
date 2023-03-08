@@ -2,25 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>     // select
-#include <sys/time.h>   // gettimeofday
+#include <unistd.h>
+#include <sys/time.h>
 #include "packet.h"
 #include "yyjson.h"
 
+#define TIMES_ON_UP 10
 
-int loop(disctx ctx){
-
-
-
-    printf("socket %d\n", ctx.sock);
-
+int ac_loop(disctx ctx){
     long long last_time = get_current_time();
     if (last_time < 0) {
         printf("got invalid timestamp %lld\n", last_time);
         return EXIT_SUCCESS;
     }
 
-    // Main Loop
+    static int times = TIMES_ON_UP;
+    
     for (;;) {
         fd_set fs;
         FD_ZERO(&fs);
@@ -39,18 +36,19 @@ int loop(disctx ctx){
             dis_socket_read(&ctx);
         }
 
-        // get current time
+        // 获取当前时间
         long long current_time = get_current_time();
         if (current_time < 0) {
             printf("got invalid timestamp %lld\n", current_time);
             break;
         }
 
-        // doing task per 5 seconds
-        if (current_time - last_time >= 3000) {
-            dis_muti_send_ready(&ctx);
-            // printf("socket %d\n", ctx->sock);
-            last_time = current_time;               // update last_time
+        // 程序启动后每5秒发送一次ready报文，总共发10次
+        if (current_time - last_time >= 5000) {
+            if(times-- > 0){
+                dis_muti_send_ready(&ctx);
+            }
+            last_time = current_time;
         }
     }
 
@@ -58,13 +56,13 @@ int loop(disctx ctx){
 }
 
 void main(){
+    // AC的参数设置
     disctx ctx = {
         .achost = "192.168.0.1:1883",
         .devid = "11L22:33:44:55:66",
         .product = "ac001",
     };
 
-    // my_socket_create(&ctx);
     dis_socket_create(&ctx);
-    loop(ctx);
+    ac_loop(ctx);
 }
