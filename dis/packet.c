@@ -156,8 +156,6 @@ int dis_muti_send_discovery(disctx * ctx){
         printf("send fail\n");
     }
 
-    printf(buffer);
-
     return 0;
 }
 
@@ -202,7 +200,7 @@ static int dis_send_offer(disctx * ctx, struct sockaddr_in address){
         return -1;
     }
 
-    // address.sin_port = htons(PORT_MULTICAST);
+    address.sin_port = htons(PORT_MULTICAST);
 
     // payload
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
@@ -237,7 +235,7 @@ static int dis_send_ack(disctx * ctx, struct sockaddr_in address){
     }
 
     // 
-    // address.sin_port = htons(PORT_MULTICAST);
+    address.sin_port = htons(PORT_MULTICAST);
 
     // payload
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
@@ -262,7 +260,6 @@ static int dis_send_ack(disctx * ctx, struct sockaddr_in address){
 
     return 0;
 }
-
 
 int dis_socket_read(disctx *ctx){
     if (ctx == NULL) {
@@ -299,11 +296,18 @@ int dis_socket_read(disctx *ctx){
     }
 
     if(strcmp(packet.stage, STAGE_READY) == 0){
+        if (ctx->done_callback != NULL){
+            ctx->done_callback(ctx);
+        }
+        
         dis_send_ack(ctx, address);
         goto end;
     }
 
     if(strcmp(packet.stage, STAGE_OFFER) == 0){
+        if (ctx->done_callback != NULL){
+            ctx->done_callback(ctx);
+        }
         dis_send_ack(ctx, address);
         goto end;
     }

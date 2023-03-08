@@ -20,6 +20,7 @@ typedef struct disctx {
     char        achost[DIS_HOST_LEN];
     char        devid     [DIS_DEVID_LEN];
     char        product [DIS_PRODUCT_LEN];
+    int (* done_callback)     (struct disctx * ctx);
 } disctx;
 
 

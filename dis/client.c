@@ -7,6 +7,7 @@
 #include "packet.h"
 #include "yyjson.h"
 
+static int done = 0;
 
 int ap_loop(disctx ctx){
 
@@ -30,8 +31,6 @@ int ap_loop(disctx ctx){
             break;
         }
 
-         printf("xxx1\n");
-
         if (ret > 0) {
             printf("xxx\n");
             dis_socket_read(&ctx);
@@ -44,8 +43,12 @@ int ap_loop(disctx ctx){
         }
 
         // doing task per 5 seconds
-        if (current_time - last_time >= 3000) {
-            dis_muti_send_discovery(&ctx);
+        if (current_time - last_time >= 5000) {
+
+            // 如果没有完成，持续发送
+            if(!done){
+                dis_muti_send_discovery(&ctx);
+            }
             last_time = current_time;               // update last_time
         }
     }
@@ -53,11 +56,19 @@ int ap_loop(disctx ctx){
     return EXIT_SUCCESS;
 }
 
+
+int done_handler(struct disctx *ctx) {
+    printf("hhh\n");
+    done = 1;
+    return 0;
+}
+
 void main(){
     disctx ctx = {
         .achost = "",
         .devid = "11L22:33:44:55:77",
         .product = "ap001",
+        .done_callback = done_handler
     };
 
     dis_socket_create(&ctx);
