@@ -8,7 +8,11 @@
 #include "yyjson.h"
 
 
-int loop(disctx *ctx){
+int loop(disctx ctx){
+
+
+
+    printf("socket %d\n", ctx.sock);
 
     long long last_time = get_current_time();
     if (last_time < 0) {
@@ -20,12 +24,12 @@ int loop(disctx *ctx){
     for (;;) {
         fd_set fs;
         FD_ZERO(&fs);
-        FD_SET(ctx->sock, &fs);
+        FD_SET(ctx.sock, &fs);
         struct timeval tv = {
             .tv_usec = 500 * 1000   // 500 ms
         };
 
-        int ret = select(ctx->sock + 1, &fs, NULL, NULL, &tv);
+        int ret = select(ctx.sock + 1, &fs, NULL, NULL, &tv);
         if (ret < 0) {
             printf("select error, ret = %d\n", ret);
             break;
@@ -45,7 +49,7 @@ int loop(disctx *ctx){
         // doing task per 5 seconds
         if (current_time - last_time >= 3000) {
             dis_muti_send_ready(&ctx);
-            printf("socket %d\n", ctx->sock);
+            // printf("socket %d\n", ctx->sock);
             last_time = current_time;               // update last_time
         }
     }
@@ -60,7 +64,7 @@ void main(){
         .product = "ac001",
     };
 
+    // my_socket_create(&ctx);
     dis_socket_create(&ctx);
-    
-    loop(&ctx);
+    loop(ctx);
 }

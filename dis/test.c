@@ -7,8 +7,8 @@
 #include "packet.h"
 #include "yyjson.h"
 
-void test_send_multicast_data(){
-    int ret = send_multicast_data("hello", 8899);
+void test_send_multicast_data(char *arg){
+    int ret = send_multicast_data(arg, 18899);
     if (ret == 0){
         printf("send ok\n");
     }
@@ -94,8 +94,9 @@ int bz(){
     return EXIT_SUCCESS;
 }
 
-void main(){
+void main(int argc, char **argv){
     // test_dis_packet_parser();
     // test_dis_muti_send_discovery();
-    bz();
+    // bz();
+    test_send_multicast_data(argv[1]);
 }

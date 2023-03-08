@@ -4,7 +4,7 @@ LIBPATH  =
 src=$(wildcard *.c)
 objs=$(patsubst %.c,%.o,$(src))
 
-all : server client test
+all : server client test listener
 
 server: server.o packet.o yyjson.o
 	$(CC) -o $@ $^ $(LIBVAR) $(LIBPATH)
@@ -16,9 +16,15 @@ test: test.o packet.o yyjson.o
 client: client.o packet.o yyjson.o
 	$(CC) -o $@ $^ $(LIBVAR) $(LIBPATH)	
 
+
+
+listener: listener.o packet.o yyjson.o
+	$(CC) -o $@ $^ $(LIBVAR) $(LIBPATH)	
+
+
 %.o:%.c
 	$(CC) $(CFLAGS) -c $<
 
 .PHONY:clean
 clean:
-	-rm -f server client test $(objs)
+	-rm -f listener server client test $(objs)

@@ -11,9 +11,8 @@
 #define STAGE_OFFER "offer"
 #define STAGE_READY "ready"
 #define STAGE_ACK "ack"
-
 #define ADDR_MULTICAST "239.255.255.250"
-#define PORT_MULTICAST 8899
+#define PORT_MULTICAST 18899
 
 
 typedef struct disctx {
@@ -41,3 +40,4 @@ int dis_socket_create(disctx *ctx);
 int dis_socket_close(disctx * ctx);
 
 long long get_current_time();
+

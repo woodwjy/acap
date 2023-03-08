@@ -390,7 +390,7 @@ int dis_socket_create(disctx *ctx){
     // bind socket
     struct sockaddr_in addr = {
         .sin_family      = AF_INET,
-        .sin_port        = PORT_MULTICAST,
+        .sin_port        = htons(PORT_MULTICAST),
         .sin_addr.s_addr = htonl(INADDR_ANY)
     };
     if (bind(ctx->sock, (struct sockaddr *)&addr, sizeof(addr)) != 0) {
