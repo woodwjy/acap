@@ -184,8 +184,6 @@ int dis_muti_send_ready(disctx * ctx){
         printf("send fail\n");
     }
 
-    // printf(buffer);
-
     return 0;
 
 }
@@ -234,7 +232,6 @@ static int dis_send_ack(disctx * ctx, struct sockaddr_in address){
         return -1;
     }
 
-    // 
     address.sin_port = htons(PORT_MULTICAST);
 
     // payload

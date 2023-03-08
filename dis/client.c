@@ -44,12 +44,11 @@ int ap_loop(disctx ctx){
 
         // doing task per 5 seconds
         if (current_time - last_time >= 5000) {
-
             // 如果没有完成，持续发送
             if(!done){
                 dis_muti_send_discovery(&ctx);
             }
-            last_time = current_time;               // update last_time
+            last_time = current_time;
         }
     }
 
@@ -64,6 +63,7 @@ int done_handler(struct disctx *ctx) {
 }
 
 void main(){
+    // AP的参数
     disctx ctx = {
         .achost = "",
         .devid = "11L22:33:44:55:77",
