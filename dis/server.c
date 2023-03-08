@@ -7,7 +7,7 @@
 #include "packet.h"
 #include "yyjson.h"
 
-#define TIMES_ON_UP 10
+#define TIMES_ON_UP 2
 
 int ac_loop(disctx ctx){
     long long last_time = get_current_time();
@@ -16,7 +16,7 @@ int ac_loop(disctx ctx){
         return EXIT_SUCCESS;
     }
 
-    static int times = TIMES_ON_UP;
+    static int times = 0;
     
     for (;;) {
         fd_set fs;
@@ -45,7 +45,7 @@ int ac_loop(disctx ctx){
 
         // 程序启动后每5秒发送一次ready报文，总共发10次
         if (current_time - last_time >= 5000) {
-            if(times-- > 0){
+            if(times++ < TIMES_ON_UP){
                 dis_muti_send_ready(&ctx);
             }
             last_time = current_time;
