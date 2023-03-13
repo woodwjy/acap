@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../util.h"
-#include "../apte_list.h"
+#include "../util/util.h"
 #include "system.h"
 
 

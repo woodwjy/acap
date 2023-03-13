@@ -4,8 +4,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "mosquitto.h"
-#include "util.h"
-#include "apte_list.h"
+#include "util/util.h"
 
 #define HOST "localhost"
 #define PORT 1883
@@ -97,9 +96,6 @@ void my_connect_callback(struct mosquitto *mosq,void *obj,int rc)
     }
     else
     {
-        apte_handler  *curhook;
-        curhook = apte_handler_list;
-
         for (int i = 0 ; i < thTableLength ; i ++ ) {
             if(mosquitto_subscribe(mosq,NULL,thTable[i].topic,2))
             {

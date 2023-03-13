@@ -65,7 +65,7 @@ int load_modules()
             {   
                 printf("[apte]%s\n", error_message);
                 printf("[apte]cannot load %s\n", path);
-                return (-1);
+                //return (-1);
             }
             
 
@@ -74,11 +74,11 @@ int load_modules()
             if(error_message)
             {
                 printf("[apte]cannot open the function func\n");
-                return (-1);
+                //return (-1);
+            }else{
+                result = pfunc();
+                printf("[apte]%s load result is: %d\n",path, result);
             }
-
-            result = pfunc();
-            printf("[apte]%s load result is: %d\n",path, result);
         }
             
     }
